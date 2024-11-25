@@ -1,8 +1,8 @@
 def choisir_graph():
-        x=int(input("Entrer le numero du Test que vous vouler afficher"))
-        fichier=f"Test/Test {x}.txt"
-        return fichier
-    
+    x=int(input("Entrer le numero du Test que vous vouler afficher"))
+    fichier=f"Test/Test {x}.txt"
+    print(fichier)
+    return fichier
 
 def lire_tableau(fichier):
     tableau = []  
@@ -23,29 +23,66 @@ def print_tab(tableau):
     for tache in tableau:
         tache_id, duree, *predecesseurs = tache
         print(f"Tâche {tache_id} | Durée : {duree} | Prédécesseurs : {predecesseurs if predecesseurs else 'Aucun'}")
-def construire_matrice(tableau, n):
-   
-    # Initialiser une matrice (n+2)x(n+2) remplie de None (ou d'une valeur spéciale)
-    matrice = [[None] * (n + 2) for _ in range(n + 2)]
+def print_graphe_ordonancement(tableau):
+    """
+    Affiche une représentation textuelle du graphe d'ordonnancement avec les sommets fictifs 0 (α) et N+1 (ω).
+    """
+    print("\nGraphe d'ordonnancement :")
+    print("Liste des arcs (prédécesseur -> successeur) :")
 
-    # Parcourir chaque tâche pour ajouter ses arcs
+    n = max(t[0] for t in tableau)  # Nombre total de tâches (le plus grand ID de tâche)
+
+    # Ajouter les arcs fictifs du sommet 0 vers les tâches sans prédécesseurs
     for tache in tableau:
         tache_id, duree, *predecesseurs = tache
-        # Ajouter des arcs des prédécesseurs vers la tâche courante
-        for pred in predecesseurs:
-            matrice[pred][tache_id] = duree
+        if not predecesseurs:  # Si la tâche n'a aucun prédécesseur
+            print(f"0 -> {tache_id}")
 
-    # Ajouter des arcs fictifs (point d'entrée et point de sortie)
+    # Ajouter les arcs du tableau principal
+    for tache in tableau:
+        tache_id, duree, *predecesseurs = tache
+        if predecesseurs:
+            for pred in predecesseurs:
+                print(f"{pred} -> {tache_id}")
+    
+    # Ajouter les arcs fictifs des tâches sans successeurs vers le sommet N+1
     for tache in tableau:
         tache_id = tache[0]
-        # Arc fictif du point de départ (0) vers les tâches sans prédécesseurs
-        if not any(tache_id in t[2:] for t in tableau):
-            matrice[0][tache_id] = 0
-        # Arc fictif des tâches sans successeurs vers le point de sortie (N+1)
-        if all(tache_id not in t[2:] for t in tableau):
-            matrice[tache_id][n + 1] = 0
+        if all(tache_id not in t[2:] for t in tableau):  # Si la tâche n'est pas prédécesseur
+            print(f"{tache_id} -> {n + 1}")
+
+def construire_matrice(tableau, n):
+    """
+    Construit une matrice de valeurs représentant le graphe d'ordonnancement.
+    Les arcs sont annotés avec les prédécesseurs des tâches.
+    """
+    n = max(t[0] for t in tableau)  # Nombre total de tâches (le plus grand ID de tâche)
+    taille = n + 2  # Inclure les sommets fictifs α (0) et ω (n+1)
+
+    # Initialiser une matrice de taille (n+2) x (n+2) avec des None (absence de connexion)
+    matrice = [[None] * taille for _ in range(taille)]
+
+    # Ajouter les arcs fictifs du sommet 0 (α) vers les tâches sans prédécesseurs
+    for tache in tableau:
+        tache_id, duree, *predecesseurs = tache
+        if not predecesseurs:  # Si la tâche n'a aucun prédécesseur
+            matrice[0][tache_id] = 0  # Utilise l'ID de la tâche comme valeur
+
+    # Ajouter les arcs selon les prédécesseurs définis dans le tableau
+    for tache in tableau:
+        tache_id, duree, *predecesseurs = tache
+        for pred in predecesseurs:
+            matrice[pred][tache_id] = pred  # Utilise l'ID du prédécesseur comme valeur
+
+    # Ajouter les arcs fictifs des tâches sans successeurs vers le sommet N+1 (ω)
+    for tache in tableau:
+        tache_id, duree, *predecesseurs = tache
+        if all(tache_id not in t[2:] for t in tableau):  # Si la tâche n'est pas prédécesseur
+            matrice[tache_id][n + 1] = tache_id  # Utilise l'ID de la tâche comme valeur
 
     return matrice
+
+
 
 
 def print_matrice(matrice):

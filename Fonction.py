@@ -23,10 +23,8 @@ def print_tab(tableau):
     for tache in tableau:
         tache_id, duree, *predecesseurs = tache
         print(f"Tâche {tache_id} | Durée : {duree} | Prédécesseurs : {predecesseurs if predecesseurs else 'Aucun'}")
+
 def print_graphe_ordonancement(tableau):
-    """
-    Affiche une représentation textuelle du graphe d'ordonnancement avec les sommets fictifs 0 (α) et N+1 (ω).
-    """
     print("\nGraphe d'ordonnancement :")
     print("Liste des arcs (prédécesseur -> successeur) :")
 
@@ -52,10 +50,7 @@ def print_graphe_ordonancement(tableau):
             print(f"{tache_id} -> {n + 1}")
 
 def construire_matrice(tableau, n):
-    """
-    Construit une matrice de valeurs représentant le graphe d'ordonnancement.
-    Les arcs sont annotés avec les prédécesseurs des tâches.
-    """
+
     n = max(t[0] for t in tableau)  # Nombre total de tâches (le plus grand ID de tâche)
     taille = n + 2  # Inclure les sommets fictifs α (0) et ω (n+1)
 
@@ -66,7 +61,7 @@ def construire_matrice(tableau, n):
     for tache in tableau:
         tache_id, duree, *predecesseurs = tache
         if not predecesseurs:  # Si la tâche n'a aucun prédécesseur
-            matrice[0][tache_id] = 0  # Utilise l'ID de la tâche comme valeur
+            matrice[0][tache_id] = 0  # Utilise 0 comme valeur
 
     # Ajouter les arcs selon les prédécesseurs définis dans le tableau
     for tache in tableau:
@@ -88,7 +83,7 @@ def construire_matrice(tableau, n):
 def print_matrice(matrice):
     print("\nMatrice de valuer :")
     # Afficher les entêtes des colonnes
-    print("   " + " ".join(f"{i:>3}" for i in range(len(matrice))))
+    print("    " + " ".join(f"{i:>3}" for i in range(len(matrice))))
     for i, ligne in enumerate(matrice):
         # Afficher chaque ligne avec son numéro
         print(f"{i:>3} " + " ".join(f"{x if x is not None else '*':>3}" for x in ligne))

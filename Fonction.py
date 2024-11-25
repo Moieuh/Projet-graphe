@@ -1,3 +1,9 @@
+def choisir_graph():
+        x=int(input("Entrer le numero du Test que vous vouler afficher"))
+        fichier=f"Test/Test {x}.txt"
+        return fichier
+    
+
 def lire_tableau(fichier):
     tableau = []  
     try:

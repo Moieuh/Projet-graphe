@@ -1,7 +1,7 @@
 from Fonction import *
 
-#Faire une boucle avec la commande cj=hoix fichier
-fichier="Test/Test 1.txt"
+#Faire une boucle avec la commande choix fichier
+fichier=choisir_graph()
 tableau = lire_tableau(fichier)
 print_tab(tableau)
 

@@ -17,6 +17,7 @@ def lire_tableau(fichier):
     except ValueError:
             print("Erreur : Format incorrect dans le fichier.")
     return tableau
+
 def print_tab(tableau):
    
     print("\nTableau de contraintes:")
@@ -81,9 +82,108 @@ def construire_matrice(tableau, n):
 
 
 def print_matrice(matrice):
-    print("\nMatrice de valuer :")
+    print("\nMatrice des valeurs :")
     # Afficher les entêtes des colonnes
     print("    " + " ".join(f"{i:>3}" for i in range(len(matrice))))
     for i, ligne in enumerate(matrice):
         # Afficher chaque ligne avec son numéro
         print(f"{i:>3} " + " ".join(f"{x if x is not None else '*':>3}" for x in ligne))
+
+
+
+def circuits(matrice):
+    """
+    On part de ce principe : Tant que c'est possible, supprimer du graphe un sommet sans
+    prédécesseur. Si on réussit a supprimer tous les sommets, le graphe est
+    sans circuit.
+    """
+
+    matricetemp = []
+    for row in matrice:
+        row_temp=[]
+        for element in row:
+            row_temp.append(element)
+        matricetemp.append(row_temp)  #copie de la matrice pour ne pas l'altérer
+    
+    test=True
+    circ= False
+    sommets_restant=[]
+
+    for cpt in range(len(matricetemp)):          # initialisation de chaque tâche
+        sommets_restant.append(cpt)
+
+    while test:
+        n= len(matricetemp)  
+        #Trouver les points d'entrées:
+        points_entree=[]
+        for i in range(n):
+            test1=True
+            for j in range(n):
+                if matricetemp[j][i] not in  (None,'*') :       # pas vide ou déjà parcouru
+                    test1 =False
+                    break   #quitte la boucle j
+            if test1 :
+                points_entree.append(i)
+
+        if len(points_entree)>0:
+            print("Points d'entrée :",end=" " )
+            
+            for cpt2 in points_entree:
+                if sommets_restant[cpt2] is not None :
+                    print(cpt2, end=" ")
+            print()
+
+        else: #cas 0 point 
+            for k in range(n):
+                for l in range(n):
+                    if matricetemp[k][l] not in (None,'*') :  #Vérifie si il reste des points non parcouru
+                        circ = True  # il reste encore des états mais  0 état sans prédécesseurs
+                        break
+                if circ:
+                    break
+            test =False 
+            
+        
+        #"Suppression" des points d'entrée avec des '*'
+        print("Suppression des points d'entrée")
+        for el in points_entree:
+            for col in range(n):
+                matricetemp[el][col] ='*'
+
+            for row in range(n):
+                matricetemp[row][el]='*'
+            sommets_restant[el]=None
+
+        reste_sommet = False
+        for sommet in sommets_restant:
+            if sommet is not None:
+                reste_sommet = True
+                break
+        if not reste_sommet:
+            test = False
+        
+        print("Sommets restants :", end=" ")
+        reste_affichage = False
+        for cpt in sommets_restant:
+            if cpt is not None:
+                print(cpt, end=" ")
+                reste_affichage = True
+        
+        if not reste_affichage:
+            print("Aucun", end="")
+        print()
+    return circ
+
+
+
+def arc_neg(matrice):
+    n = len(matrice)
+    test = False
+    for i in range(n):
+        for j in range(n):
+            if matrice[i][j] is not None and matrice[i][j]< 0: #On vérifie d'abord que c'est bien un nombre
+                test = True
+                break  # On quitte la boucle interne dès qu'on trouve un arc négatif
+        if test:
+            break  # On quitte la boucle externe si l'arc négatif a été trouvé
+    return test

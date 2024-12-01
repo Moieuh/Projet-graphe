@@ -87,4 +87,3 @@ def print_matrice(matrice):
     for i, ligne in enumerate(matrice):
         # Afficher chaque ligne avec son numéro
         print(f"{i:>3} " + " ".join(f"{x if x is not None else '*':>3}" for x in ligne))
-

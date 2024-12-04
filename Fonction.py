@@ -190,3 +190,47 @@ def arc_neg(matrice):
         if test:
             break  # On quitte la boucle externe si l'arc négatif a été trouvé
     return test
+
+def calculer_rangs(tableau, n):
+    # Créer un dictionnaire de degrés entrants (d-1)
+    degres_entrants = {i: 0 for i in range(1, n+1)}
+
+    # Créer un dictionnaire des successeurs pour chaque tâche
+    successeurs = {i: [] for i in range(1, n+1)}
+
+    # Remplir les structures de données à partir du tableau
+    for tache in tableau:
+        tache_id, _, *predecesseurs = tache
+        for pred in predecesseurs:
+            degres_entrants[tache_id] += 1  # Augmenter le degré entrant du successeur
+            successeurs[pred].append(tache_id)  # Ajouter le successeur au prédécesseur
+
+    # Initialiser le rang pour chaque tâche
+    rang = {i: None for i in range(1, n+1)}
+
+    # Initialisation de l'ensemble S0 (les tâches sans prédécesseur, d-1 = 0)
+    S_k = {i for i in range(1, n+1) if degres_entrants[i] == 0}
+    
+    k = 0  # Le rang initial
+
+    # Tant qu'il existe des tâches à traiter
+    while S_k:
+        # Attribuer le rang à chaque tâche de S_k
+        for i in S_k:
+            rang[i] = k
+        
+        # Créer un nouvel ensemble Sk+1 vide
+        S_k_plus_1 = set()
+
+        # Pour chaque tâche dans S_k, traiter ses successeurs
+        for i in S_k:
+            for j in successeurs[i]:
+                degres_entrants[j] -= 1  # Décrémenter le degré entrant du successeur
+                if degres_entrants[j] == 0:  # Si d-1(j) devient 0, l'ajouter à Sk+1
+                    S_k_plus_1.add(j)
+        
+        # Passer à l'itération suivante
+        S_k = S_k_plus_1
+        k += 1
+
+    return rang

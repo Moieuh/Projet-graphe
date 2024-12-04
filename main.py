@@ -2,7 +2,7 @@ from Fonction import *
 
 
 #Faire une boucle avec la commande choix fichier
-fichier="Test/table 1.txt"
+fichier="Test/table 14.txt"
 tableau = lire_tableau(fichier)
 print_tab(tableau)
 print_graphe_ordonancement(tableau)
@@ -13,7 +13,12 @@ if tableau:
     
     print_matrice(matrice)
 
- 
+    
+rangs=calculer_rangs(tableau,n)
+print("Rangs des sommets :")
+for sommet, rang in rangs.items():
+    print(f"Sommet {sommet} : Rang {rang}")
+
     
 
   

@@ -125,7 +125,7 @@ def circuits(matrice):
             if test1 and sommets_restant[i] is not None :
                 points_entree.append(i)
 
-
+        
         if len(points_entree)>0:
 
             print("Points d'entrée :",end=" " )
@@ -144,10 +144,12 @@ def circuits(matrice):
                 if circ:
                     break
             test =False 
-            
+        if circ:
+            break
         
         #"Suppression" des points d'entrée avec des '*'
         print("Suppression des points d'entrée")
+        print("VOICI",points_entree)
         for el in points_entree:
             for col in range(n):
                 matricetemp[el][col] ='*'

@@ -21,7 +21,7 @@ if tableau:
         print("C'est n'est pas un graphe d'ordonnancement")
         
     else :
-        print("Il n'y a pass de circuit ")
+        print("Il n'y a pas de circuit ")
         test_arc=arc_neg(matrice)
         if test_arc ==False:
             print("Il n'y a pas d'arcs négatifs")
@@ -29,4 +29,3 @@ if tableau:
         else:
             print("Il a des arcs négatifs")
             print("C'est n'est pas un graphe d'ordonnancement")
-            

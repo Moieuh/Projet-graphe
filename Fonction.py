@@ -192,10 +192,12 @@ def arc_neg(matrice):
     return test
 
 def calculer_rangs(tableau, n):
-    # Créer un dictionnaire de degrés entrants (d-1)
+    print("Rangs des sommets :")
+    print(f"Sommet 0 : Rang 0")
+    # Créer un dictionnaire de degrés entrants (d-1) pour les tâches, excluant 0
     degres_entrants = {i: 0 for i in range(1, n+1)}
 
-    # Créer un dictionnaire des successeurs pour chaque tâche
+    # Créer un dictionnaire des successeurs pour chaque tâche, excluant 0
     successeurs = {i: [] for i in range(1, n+1)}
 
     # Remplir les structures de données à partir du tableau
@@ -205,7 +207,7 @@ def calculer_rangs(tableau, n):
             degres_entrants[tache_id] += 1  # Augmenter le degré entrant du successeur
             successeurs[pred].append(tache_id)  # Ajouter le successeur au prédécesseur
 
-    # Initialiser le rang pour chaque tâche
+    # Initialiser le rang pour chaque tâche, excluant 0
     rang = {i: None for i in range(1, n+1)}
 
     # Initialisation de l'ensemble S0 (les tâches sans prédécesseur, d-1 = 0)
@@ -233,4 +235,8 @@ def calculer_rangs(tableau, n):
         S_k = S_k_plus_1
         k += 1
 
+    # Attribuer le rang max + 1 au sommet n+1
+    rang[n+1] = k
+
     return rang
+

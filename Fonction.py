@@ -122,10 +122,12 @@ def circuits(matrice):
                 if matricetemp[j][i] not in  (None,'*') :       # pas vide ou déjà parcouru
                     test1 =False
                     break   #quitte la boucle j
-            if test1 :
+            if test1 and sommets_restant[i] is not None :
                 points_entree.append(i)
 
+
         if len(points_entree)>0:
+
             print("Points d'entrée :",end=" " )
             
             for cpt2 in points_entree:
@@ -154,6 +156,7 @@ def circuits(matrice):
                 matricetemp[row][el]='*'
             sommets_restant[el]=None
 
+        # On s'assure qui reste des sommets pour continuer
         reste_sommet = False
         for sommet in sommets_restant:
             if sommet is not None:
@@ -172,6 +175,8 @@ def circuits(matrice):
         if not reste_affichage:
             print("Aucun", end="")
         print()
+
+       
     return circ
 
 

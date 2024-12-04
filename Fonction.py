@@ -35,20 +35,22 @@ def print_graphe_ordonancement(tableau):
     for tache in tableau:
         tache_id, duree, *predecesseurs = tache
         if not predecesseurs:  # Si la tâche n'a aucun prédécesseur
-            print(f"0 -> {tache_id}")
+            print(f"0 -> {tache_id} = 0")
 
     # Ajouter les arcs du tableau principal
     for tache in tableau:
         tache_id, duree, *predecesseurs = tache
         if predecesseurs:
             for pred in predecesseurs:
-                print(f"{pred} -> {tache_id}")
+                # Trouver la durée de la tâche prédécesseur
+                pred_duree = next(d for id_tache, d, *p in tableau if id_tache == pred)
+                print(f"{pred} -> {tache_id} = {pred_duree}")
     
     # Ajouter les arcs fictifs des tâches sans successeurs vers le sommet N+1
     for tache in tableau:
         tache_id = tache[0]
         if all(tache_id not in t[2:] for t in tableau):  # Si la tâche n'est pas prédécesseur
-            print(f"{tache_id} -> {n + 1}")
+            print(f"{tache_id} -> {n + 1} = {tache[1]}")
 
 def construire_matrice(tableau, n):
 
@@ -68,13 +70,14 @@ def construire_matrice(tableau, n):
     for tache in tableau:
         tache_id, duree, *predecesseurs = tache
         for pred in predecesseurs:
-            matrice[pred][tache_id] = pred  # Utilise l'ID du prédécesseur comme valeur
+            pred_duree = next(d for id_tache, d, *p in tableau if id_tache == pred)
+            matrice[pred][tache_id] = pred_duree  # Utilise l'ID du prédécesseur comme valeur
 
     # Ajouter les arcs fictifs des tâches sans successeurs vers le sommet N+1 (ω)
     for tache in tableau:
         tache_id, duree, *predecesseurs = tache
         if all(tache_id not in t[2:] for t in tableau):  # Si la tâche n'est pas prédécesseur
-            matrice[tache_id][n + 1] = tache_id  # Utilise l'ID de la tâche comme valeur
+            matrice[tache_id][n + 1] = tache[1]  # Utilise l'ID de la tâche comme valeur
 
     return matrice
 
@@ -193,3 +196,53 @@ def arc_neg(matrice):
         if test:
             break  # On quitte la boucle externe si l'arc négatif a été trouvé
     return test
+
+def calculer_rangs(tableau, n):
+    print("Rangs des sommets :")
+    print(f"Sommet 0 : Rang 0")
+    # Créer un dictionnaire de degrés entrants (d-1) pour les tâches, excluant 0
+    degres_entrants = {i: 0 for i in range(1, n+1)}
+
+    # Créer un dictionnaire des successeurs pour chaque tâche, excluant 0
+    successeurs = {i: [] for i in range(1, n+1)}
+
+    # Remplir les structures de données à partir du tableau
+    for tache in tableau:
+        tache_id, _, *predecesseurs = tache
+        for pred in predecesseurs:
+            degres_entrants[tache_id] += 1  # Augmenter le degré entrant du successeur
+            successeurs[pred].append(tache_id)  # Ajouter le successeur au prédécesseur
+
+    # Initialiser le rang pour chaque tâche, excluant 0
+    rang = {i: None for i in range(1, n+1)}
+
+    # Initialisation de l'ensemble S0 (les tâches sans prédécesseur, d-1 = 0)
+    S_k = {i for i in range(1, n+1) if degres_entrants[i] == 0}
+    
+    k = 0  # Le rang initial
+
+    # Tant qu'il existe des tâches à traiter
+    while S_k:
+        # Attribuer le rang à chaque tâche de S_k
+        for i in S_k:
+            rang[i] = k
+        
+        # Créer un nouvel ensemble Sk+1 vide
+        S_k_plus_1 = set()
+
+        # Pour chaque tâche dans S_k, traiter ses successeurs
+        for i in S_k:
+            for j in successeurs[i]:
+                degres_entrants[j] -= 1  # Décrémenter le degré entrant du successeur
+                if degres_entrants[j] == 0:  # Si d-1(j) devient 0, l'ajouter à Sk+1
+                    S_k_plus_1.add(j)
+        
+        # Passer à l'itération suivante
+        S_k = S_k_plus_1
+        k += 1
+
+    # Attribuer le rang max + 1 au sommet n+1
+    rang[n+1] = k
+
+    return rang
+

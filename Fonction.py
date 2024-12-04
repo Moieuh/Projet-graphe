@@ -149,7 +149,6 @@ def circuits(matrice):
         
         #"Suppression" des points d'entrée avec des '*'
         print("Suppression des points d'entrée")
-        print("VOICI",points_entree)
         for el in points_entree:
             for col in range(n):
                 matricetemp[el][col] ='*'

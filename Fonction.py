@@ -35,20 +35,22 @@ def print_graphe_ordonancement(tableau):
     for tache in tableau:
         tache_id, duree, *predecesseurs = tache
         if not predecesseurs:  # Si la tâche n'a aucun prédécesseur
-            print(f"0 -> {tache_id}")
+            print(f"0 -> {tache_id} = 0")
 
     # Ajouter les arcs du tableau principal
     for tache in tableau:
         tache_id, duree, *predecesseurs = tache
         if predecesseurs:
             for pred in predecesseurs:
-                print(f"{pred} -> {tache_id}")
+                # Trouver la durée de la tâche prédécesseur
+                pred_duree = next(d for id_tache, d, *p in tableau if id_tache == pred)
+                print(f"{pred} -> {tache_id} = {pred_duree}")
     
     # Ajouter les arcs fictifs des tâches sans successeurs vers le sommet N+1
     for tache in tableau:
         tache_id = tache[0]
         if all(tache_id not in t[2:] for t in tableau):  # Si la tâche n'est pas prédécesseur
-            print(f"{tache_id} -> {n + 1}")
+            print(f"{tache_id} -> {n + 1} = {tache[1]}")
 
 def construire_matrice(tableau, n):
 
@@ -68,13 +70,14 @@ def construire_matrice(tableau, n):
     for tache in tableau:
         tache_id, duree, *predecesseurs = tache
         for pred in predecesseurs:
-            matrice[pred][tache_id] = pred  # Utilise l'ID du prédécesseur comme valeur
+            pred_duree = next(d for id_tache, d, *p in tableau if id_tache == pred)
+            matrice[pred][tache_id] = pred_duree  # Utilise l'ID du prédécesseur comme valeur
 
     # Ajouter les arcs fictifs des tâches sans successeurs vers le sommet N+1 (ω)
     for tache in tableau:
         tache_id, duree, *predecesseurs = tache
         if all(tache_id not in t[2:] for t in tableau):  # Si la tâche n'est pas prédécesseur
-            matrice[tache_id][n + 1] = tache_id  # Utilise l'ID de la tâche comme valeur
+            matrice[tache_id][n + 1] = tache[1]  # Utilise l'ID de la tâche comme valeur
 
     return matrice
 

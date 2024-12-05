@@ -246,3 +246,5 @@ def calculer_rangs(tableau, n):
 
     return rang
 
+def calendar_plutard():
+    

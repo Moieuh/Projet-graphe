@@ -258,22 +258,25 @@ def calendrier_plus_tard(dates_tot, rang, tableau):
     dates_tard = [float('inf')] * (n + 1)
     dates_tard[-1] = max(dates_tot)
 
-    # Parcourir les tâches dans l'ordre inverse des rangs
-    for i in n:
-        _, duree, *predecesseurs = tableau[n-i]
-        
-    # Calculer la date minimum desc tâches précédantes
-    # Cette boucle utilise next mais jsais plus comment faire sans :'(
-    for j in predecesseurs:
-        dates_tard[j] = min(dates_tard[j], dates_tard[i] - next(t[1] for t in tableau if t[0] == j))
-            
+    # Créer un dictionnaire pour un accès plus rapide
+    taches = {t[0]: t[1] for t in tableau}
+
+    # Parcourir les tâches dans l'ordre décroissant des rangs
+    for i in sorted(rang, key=lambda x: rang[x], reverse=True):
+        _, duree, *predecesseurs = next(t for t in tableau if t[0] == i)
+        # Mise à jour des dates au plus tard des prédécesseurs
+        for j in predecesseurs:
+            dates_tard[j] = min(dates_tard[j], dates_tard[i] - taches[j])
+
     return dates_tard
 
 # Calculer les marges
 def calculer_marges(dates_tot, dates_tard):
     
-    for tot, tard in dates_tot, dates_tard:
-        marges = [tard - tot]
-            
+    marges = []
+    for tot, tard in zip(dates_tot, dates_tard):
+        marges.append(tard-tot)
+        
     return marges
+
 

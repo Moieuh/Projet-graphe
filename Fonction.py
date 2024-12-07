@@ -254,19 +254,15 @@ def calculer_rangs(tableau, n):
 def calendrier_plus_tard(dates_tot, rang, tableau):
     
     # Initialiser à l'infini
-    n = len(rang)
-    dates_tard = [float('inf')] * (n + 1)
-    dates_tard[-1] = max(dates_tot)
-
-    # Créer un dictionnaire pour un accès plus rapide
-    taches = {t[0]: t[1] for t in tableau}
-
+    n = len(matrice)
+    dates_tard = [float('inf')] * n
+    dates_tard[-1] = dates_tot[-1]
+    
     # Parcourir les tâches dans l'ordre décroissant des rangs
-    for i in sorted(rang, key=lambda x: rang[x], reverse=True):
-        _, duree, *predecesseurs = next(t for t in tableau if t[0] == i)
-        # Mise à jour des dates au plus tard des prédécesseurs
-        for j in predecesseurs:
-            dates_tard[j] = min(dates_tard[j], dates_tard[i] - taches[j])
+    for i in range(n - 2, -1, -1):
+        for j in range(n):
+            if matrice[i][j] is not None and matrice[i][j] != '*':
+                dates_tard[i] = min(dates_tard[i], dates_tard[j] - matrice[i][j])
 
     return dates_tard
 

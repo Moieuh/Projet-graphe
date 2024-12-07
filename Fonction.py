@@ -246,3 +246,45 @@ def calculer_rangs(tableau, n):
 
     return rang
 
+def calendrier_plus_tot_bellman(tableau, n):
+    """
+    Calcule les dates au plus tôt pour chaque sommet à l'aide de l'algorithme de Bellman-Ford.
+    tableau : Liste de tâches sous forme [ID_tâche, durée, prédécesseurs...].
+    n : Nombre total de tâches (exclut les sommets fictifs 0 et n+1).
+    """
+    # Initialisation
+    dates_tot = [float('-inf')] * (n + 2)  # Inclut α (0) et ω (n+1)
+    dates_tot[0] = 0  # Le sommet source α est initialisé à 0
+
+    # Ajouter les arcs fictifs pour le sommet de fin (ω)
+    arcs_fictifs_fin = [
+        (tache[0], n + 1, tache[1]) for tache in tableau
+        if all(tache[0] not in other[2:] for other in tableau)
+    ]
+
+    # Ensemble des arcs pour Bellman-Ford
+    arcs = []
+    for tache in tableau:
+        tache_id, duree, *predecesseurs = tache
+        for pred in predecesseurs:
+            arcs.append((pred, tache_id, duree))
+    arcs.extend(arcs_fictifs_fin)  # Ajouter les arcs fictifs
+
+    # Boucle principale (au plus n-1 itérations)
+    for iteration in range(n + 1):
+        changements = False  # Vérifie si une mise à jour est effectuée
+        for u, v, w in arcs:
+            if dates_tot[u] != float('-inf') and dates_tot[v] < dates_tot[u] + w:
+                dates_tot[v] = dates_tot[u] + w
+                changements = True
+
+        # Si aucune mise à jour n'a été faite, on peut s'arrêter
+        if not changements:
+            break
+
+        # Après n itérations, vérifier si des changements subsistent (détection de circuits absorbants)
+        if iteration == n and changements:
+            print("Circuit absorbant détecté.")
+            return None
+
+    return dates_tot

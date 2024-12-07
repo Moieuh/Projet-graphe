@@ -35,7 +35,7 @@ if tableau:
 
 
 dates_tot = [0, 3, 5, 6, 10]     # Exemple de dates au plus tôt
-dates_tard = calendrier_plus_tard(matrice)
+dates_tard = calendrier_plus_tard(matrice, dates_tot)
 print("Dates au plus tard :", dates_tard)
 
     # Calcul des marges

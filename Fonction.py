@@ -251,7 +251,7 @@ def calculer_rangs(tableau, n):
 
 
 # Calculer le calendrier au plus tard
-def calendrier_plus_tard(dates_tot, rang, tableau):
+def calendrier_plus_tard(matrice):
     
     # Initialiser à l'infini
     n = len(matrice)

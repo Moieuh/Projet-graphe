@@ -34,5 +34,11 @@ if tableau:
             print("C'est n'est pas un graphe d'ordonnancement")
 
 
-  
+dates_tot = [0, 3, 5, 6, 10]     # Exemple de dates au plus tôt
+dates_tard = calendrier_plus_tard(dates_tot, rangs, tableau)
+print("Dates au plus tard :", dates_tard)
+
+    # Calcul des marges
+marges = calculer_marges(dates_tot, dates_tard)
+print("Marges :", marges)
             

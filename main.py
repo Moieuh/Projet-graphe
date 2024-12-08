@@ -15,6 +15,7 @@ while(r==0):
     if tableau:
         n = len(tableau)  # Nombre de tâches
         matrice = construire_matrice(tableau, n)
+        print(matrice)
         
         print_matrice(matrice)
         print("\n")
@@ -56,6 +57,10 @@ while(r==0):
                     # Calcul des marges
                 marges = calculer_marges(dates_tot, dates_tard)
                 print("Marges :", marges)
+                liste_chemin_critique=chemin_critique(marges,matrice)
+                print("Le chemin critique : ", end='')
+                for ele in liste_chemin_critique:
+                    print(ele[0],end=' ')
             
             else:
                 print("Il a des arcs négatifs")

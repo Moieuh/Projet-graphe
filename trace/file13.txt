@@ -1,0 +1,80 @@
+
+Tableau de contraintes:
+T�che 1 | Dur�e : 9 | Pr�d�cesseurs : Aucun
+T�che 2 | Dur�e : 2 | Pr�d�cesseurs : [1, 3]
+T�che 3 | Dur�e : 4 | Pr�d�cesseurs : Aucun
+T�che 4 | Dur�e : 7 | Pr�d�cesseurs : [3]
+
+
+
+Graphe d'ordonnancement :
+Liste des arcs (pr�d�cesseur -> successeur) :
+0 -> 1 = 0
+0 -> 3 = 0
+1 -> 2 = 9
+3 -> 2 = 4
+3 -> 4 = 4
+2 -> 5 = 2
+4 -> 5 = 7
+
+
+
+Matrice des valeurs :
+      0   1   2   3   4   5
+  0   *   0   *   0   *   *
+  1   *   *   9   *   *   *
+  2   *   *   *   *   *   2
+  3   *   *   4   *   4   *
+  4   *   *   *   *   *   7
+  5   *   *   *   *   *   *
+
+
+Points d'entr�e : 0 
+Suppression des points d'entr�e
+Sommets restants : 1 2 3 4 5 
+Points d'entr�e : 1 3 
+Suppression des points d'entr�e
+Sommets restants : 2 4 5 
+Points d'entr�e : 2 4 
+Suppression des points d'entr�e
+Sommets restants : 5 
+Points d'entr�e : 5 
+Suppression des points d'entr�e
+Sommets restants : Aucun
+Il n'y a pas de circuit 
+Il n'y a pas d'arcs n�gatifs
+C'est un graphe d'ordonnancement
+
+
+Rangs des sommets :
+Sommet 0 : Rang 0
+Sommet 1 : Rang 1
+Sommet 2 : Rang 2
+Sommet 3 : Rang 1
+Sommet 4 : Rang 2
+Sommet 5 : Rang 3
+
+
+Calendrier au plus t�t:
+Sommet 0 : Date au plus t�t 0
+Sommet 1 : Date au plus t�t 0
+Sommet 2 : Date au plus t�t 9
+Sommet 3 : Date au plus t�t 0
+Sommet 4 : Date au plus t�t 4
+Sommet 5 : Date au plus t�t 11
+
+
+Calendrier au plus tard:
+Sommet 0 : Date au plus tard 0
+Sommet 1 : Date au plus tard 0
+Sommet 2 : Date au plus tard 9
+Sommet 3 : Date au plus tard 0
+Sommet 4 : Date au plus tard 4
+Sommet 5 : Date au plus tard 11
+
+
+Marges : [0, 0, 0, 0, 0, 0]
+
+
+Le chemin critique : 0 1 2 3 4 5 
+

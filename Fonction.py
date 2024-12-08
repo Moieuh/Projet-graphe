@@ -29,6 +29,8 @@ def tri_topologique(matrice):
     
     return ordre_topologique
 
+
+
 def choisir_graph():
     x=int(input("Entrer le numero du Test que vous vouler afficher: "))
     fichier=f"Test/table {x}.txt"
@@ -363,3 +365,38 @@ def calculer_marges(dates_tot, dates_tard):
         marges.append(tard-tot)
         
     return marges
+
+def chemin_critique(marge,matrice):
+    
+    #recherche tache critique == celle dont la marge ==0
+    taches_critique=[]
+    for i in range(len(marge)):
+        if marge[i]==0:
+            taches_critique.append(i)
+
+    
+    chemins_critique =[]
+    
+    #Fonction qui permet de retracer la racine 
+    def suivre_chemin(tache_id, chemin):
+        
+        # Ajouter la tâche au chemin
+        chemin.append(tache_id)
+
+        # Vérifier les prédécesseurs de cette tâche
+        for i in range(len(matrice)):
+            if matrice[i][tache_id] not in (None,'*') and marge[i] == 0:
+                suivre_chemin(i, chemin.copy())  # Appel récursif pour suivre le prédécesseur
+    
+    
+    # Pour chaque tâche du chemin critique, reconstruire les chemins
+    for tache_id in taches_critique:
+        
+        chemin = []
+        suivre_chemin(tache_id, chemin)
+        # Ajouter le chemin à la liste des chemins critiques (éviter les doublons)
+        if chemin not in chemins_critique:
+            chemins_critique.append(chemin) 
+    
+    # Retourner la liste des chemins critiques
+    return chemins_critique

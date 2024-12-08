@@ -1,0 +1,131 @@
+
+Tableau de contraintes:
+Tâche 1 | Durée : 1 | Prédécesseurs : [4, 5, 8, 10]
+Tâche 2 | Durée : 2 | Prédécesseurs : [7]
+Tâche 3 | Durée : 3 | Prédécesseurs : [6, 10]
+Tâche 4 | Durée : 4 | Prédécesseurs : Aucun
+Tâche 5 | Durée : 5 | Prédécesseurs : [4]
+Tâche 6 | Durée : 6 | Prédécesseurs : Aucun
+Tâche 7 | Durée : 7 | Prédécesseurs : Aucun
+Tâche 8 | Durée : 8 | Prédécesseurs : [5, 7]
+Tâche 9 | Durée : 9 | Prédécesseurs : [1, 2, 3, 8]
+Tâche 10 | Durée : 10 | Prédécesseurs : Aucun
+
+
+
+Graphe d'ordonnancement :
+Liste des arcs (prédécesseur -> successeur) :
+0 -> 4 = 0
+0 -> 6 = 0
+0 -> 7 = 0
+0 -> 10 = 0
+4 -> 1 = 4
+5 -> 1 = 5
+8 -> 1 = 8
+10 -> 1 = 10
+7 -> 2 = 7
+6 -> 3 = 6
+10 -> 3 = 10
+4 -> 5 = 4
+5 -> 8 = 5
+7 -> 8 = 7
+1 -> 9 = 1
+2 -> 9 = 2
+3 -> 9 = 3
+8 -> 9 = 8
+9 -> 11 = 9
+
+
+
+Matrice des valeurs :
+      0   1   2   3   4   5   6   7   8   9  10  11
+  0   *   *   *   *   0   *   0   0   *   *   0   *
+  1   *   *   *   *   *   *   *   *   *   1   *   *
+  2   *   *   *   *   *   *   *   *   *   2   *   *
+  3   *   *   *   *   *   *   *   *   *   3   *   *
+  4   *   4   *   *   *   4   *   *   *   *   *   *
+  5   *   5   *   *   *   *   *   *   5   *   *   *
+  6   *   *   *   6   *   *   *   *   *   *   *   *
+  7   *   *   7   *   *   *   *   *   7   *   *   *
+  8   *   8   *   *   *   *   *   *   *   8   *   *
+  9   *   *   *   *   *   *   *   *   *   *   *   9
+ 10   *  10   *  10   *   *   *   *   *   *   *   *
+ 11   *   *   *   *   *   *   *   *   *   *   *   *
+
+
+Points d'entrée : 0 
+Suppression des points d'entrée
+Sommets restants : 1 2 3 4 5 6 7 8 9 10 11 
+Points d'entrée : 4 6 7 10 
+Suppression des points d'entrée
+Sommets restants : 1 2 3 5 8 9 11 
+Points d'entrée : 2 3 5 
+Suppression des points d'entrée
+Sommets restants : 1 8 9 11 
+Points d'entrée : 8 
+Suppression des points d'entrée
+Sommets restants : 1 9 11 
+Points d'entrée : 1 
+Suppression des points d'entrée
+Sommets restants : 9 11 
+Points d'entrée : 9 
+Suppression des points d'entrée
+Sommets restants : 11 
+Points d'entrée : 11 
+Suppression des points d'entrée
+Sommets restants : Aucun
+Il n'y a pas de circuit 
+Il n'y a pas d'arcs négatifs
+C'est un graphe d'ordonnancement
+
+
+Rangs des sommets :
+Sommet 0 : Rang 0
+Sommet 1 : Rang 4
+Sommet 2 : Rang 2
+Sommet 3 : Rang 2
+Sommet 4 : Rang 1
+Sommet 5 : Rang 2
+Sommet 6 : Rang 1
+Sommet 7 : Rang 1
+Sommet 8 : Rang 3
+Sommet 9 : Rang 5
+Sommet 10 : Rang 1
+Sommet 11 : Rang 6
+
+
+Calendrier au plus tôt:
+Sommet 0 : Date au plus tôt 0
+Sommet 1 : Date au plus tôt 17
+Sommet 2 : Date au plus tôt 7
+Sommet 3 : Date au plus tôt 10
+Sommet 4 : Date au plus tôt 0
+Sommet 5 : Date au plus tôt 4
+Sommet 6 : Date au plus tôt 0
+Sommet 7 : Date au plus tôt 0
+Sommet 8 : Date au plus tôt 9
+Sommet 9 : Date au plus tôt 18
+Sommet 10 : Date au plus tôt 0
+Sommet 11 : Date au plus tôt 27
+
+
+Calendrier au plus tard:
+Sommet 0 : Date au plus tard 0
+Sommet 1 : Date au plus tard 17
+Sommet 2 : Date au plus tard 16
+Sommet 3 : Date au plus tard 15
+Sommet 4 : Date au plus tard 0
+Sommet 5 : Date au plus tard 4
+Sommet 6 : Date au plus tard 9
+Sommet 7 : Date au plus tard 2
+Sommet 8 : Date au plus tard 9
+Sommet 9 : Date au plus tard 18
+Sommet 10 : Date au plus tard 5
+Sommet 11 : Date au plus tard 27
+
+
+Marges : [0, 0, 9, 5, 0, 0, 9, 2, 0, 0, 5, 0]
+
+
+Le chemin critique : 0 1 4 5 8 9 11 
+

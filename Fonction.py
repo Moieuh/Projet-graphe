@@ -1,7 +1,38 @@
+from collections import deque
+
+def tri_topologique(matrice):
+    # Calculer les degrés entrants
+    n = len(matrice)
+    degres_entrants = [0] * n
+    for i in range(n):
+        for j in range(n):
+            if matrice[i][j] is not None:
+                degres_entrants[j] += 1
+    
+    # Initialiser la file pour les sommets de degré entrant 0
+    file = deque([i for i in range(n) if degres_entrants[i] == 0])
+    ordre_topologique = []
+    
+    while file:
+        tache = file.popleft()
+        ordre_topologique.append(tache)
+        
+        # Réduire le degré entrant des voisins
+        for j in range(n):
+            if matrice[tache][j] is not None:
+                degres_entrants[j] -= 1
+                if degres_entrants[j] == 0:
+                    file.append(j)
+    
+    if len(ordre_topologique) != n:
+        raise ValueError("Le graphe contient un cycle, impossible de faire un tri topologique.")
+    
+    return ordre_topologique
+
 def choisir_graph():
-    x=int(input("Entrer le numero du Test que vous vouler afficher"))
-    fichier=f"Test/Test {x}.txt"
-    print(fichier)
+    x=int(input("Entrer le numero du Test que vous vouler afficher: "))
+    fichier=f"Test/table {x}.txt"
+    print("Le fichier tester est ",fichier)
     return fichier
 
 def lire_tableau(fichier):
@@ -245,63 +276,84 @@ def calculer_rangs(tableau, n):
     rang[n+1] = k
 
     return rang
-def calendrier_plus_tot_bellman(tableau, n):
-    """
-    Calcule les dates au plus tôt pour chaque sommet à l'aide de l'algorithme de Bellman-Ford.
-    tableau : Liste de tâches sous forme [ID_tâche, durée, prédécesseurs...].
-    n : Nombre total de tâches (exclut les sommets fictifs 0 et n+1).
-    """
-    # Initialisation
-    dates_tot = [float('-inf')] * (n + 2)  # Inclut α (0) et ω (n+1)
-    dates_tot[0] = 0  # Le sommet source α est initialisé à 0
 
-    # Ajouter les arcs fictifs pour le sommet de fin (ω)
-    arcs_fictifs_fin = [
-        (tache[0], n + 1, tache[1]) for tache in tableau
-        if all(tache[0] not in other[2:] for other in tableau)
-    ]
 
-    # Ensemble des arcs pour Bellman-Ford
-    arcs = []
+def calcul_dates_au_plus_tot(tableau):
+    # Trouver les identifiants uniques des tâches
+    ids_taches = set(t[0] for t in tableau)
+    for t in tableau:
+        ids_taches.update(t[2:])  # Ajouter tous les prédécesseurs
+    n = max(ids_taches)  # Identifier la tâche avec le plus grand identifiant
+
+    # Initialiser les dates au plus tôt
+    dates_au_plus_tot = [0] * (n + 2)  # Inclut le sommet fictif final n+1
+
+    # Construire une table des prédécesseurs
+    predecesseurs = {i: [] for i in range(n + 1)}
+    successeurs = {i: [] for i in range(n + 1)}
+    durees = {tache[0]: tache[1] for tache in tableau}
+
     for tache in tableau:
-        tache_id, duree, *predecesseurs = tache
-        for pred in predecesseurs:
-            arcs.append((pred, tache_id, duree))
-    arcs.extend(arcs_fictifs_fin)  # Ajouter les arcs fictifs
+        tache_id, duree, *preds = tache
+        if not preds:  # Si pas de prédécesseurs, dépend du sommet fictif 0
+            predecesseurs[tache_id].append(0)
+            successeurs[0].append(tache_id)
+        else:
+            for pred in preds:
+                predecesseurs[tache_id].append(pred)
+                successeurs[pred].append(tache_id)
 
-    # Boucle principale (au plus n-1 itérations)
-    for iteration in range(n + 1):
-        changements = False  # Vérifie si une mise à jour est effectuée
-        for u, v, w in arcs:
-            if dates_tot[u] != float('-inf') and dates_tot[v] < dates_tot[u] + w:
-                dates_tot[v] = dates_tot[u] + w
-                changements = True
+    # Tri topologique
+    ordre_topologique = []
+    degres_entrants = {i: len(predecesseurs[i]) for i in range(n + 1)}
+    pile = [i for i in range(n + 1) if degres_entrants[i] == 0]
 
-        # Si aucune mise à jour n'a été faite, on peut s'arrêter
-        if not changements:
-            break
+    while pile:
+        tache = pile.pop()
+        ordre_topologique.append(tache)
+        for succ in successeurs[tache]:
+            degres_entrants[succ] -= 1
+            if degres_entrants[succ] == 0:
+                pile.append(succ)
 
-        # Après n itérations, vérifier si des changements subsistent (détection de circuits absorbants)
-        if iteration == n and changements:
-            print("Circuit absorbant détecté.")
-            return None
+    # Calculer les dates au plus tôt
+    for tache_id in ordre_topologique:
+        if tache_id in durees:  # Ignorer les sommets fictifs sans durée
+            for pred in predecesseurs[tache_id]:
+                dates_au_plus_tot[tache_id] = max(
+                    dates_au_plus_tot[tache_id],
+                    dates_au_plus_tot[pred] + durees.get(pred, 0)
+                )
 
-    return dates_tot
+    # Gérer le sommet fictif final
+    for tache_id in range(1, n + 1):
+        if all(tache_id not in t[2:] for t in tableau):  # Si la tâche n'a pas de successeur
+            dates_au_plus_tot[n + 1] = max(
+                dates_au_plus_tot[n + 1],
+                dates_au_plus_tot[tache_id] + durees[tache_id]
+            )
+
+    return dates_au_plus_tot
+
+
+
 # Calculer le calendrier au plus tard
-def calendrier_plus_tard(dates_tot,matrice):
-    
-    # Initialiser à l'infini
+def calendrier_plus_tard(dates_tot, matrice):
     n = len(matrice)
     dates_tard = [float('inf')] * n
-    dates_tard[-1] = dates_tot[-1]
-    
-    # Parcourir les tâches dans l'ordre décroissant des rangs
-    for i in range(n - 2, -1, -1):
-        for j in range(n):
-            if matrice[i][j] is not None and matrice[i][j] != '*':
-                dates_tard[i] = min(dates_tard[i], dates_tard[j] - matrice[i][j])
+    dates_tard[-1] = dates_tot[-1]  # La dernière tâche a sa date au plus tard égale à sa date au plus tôt
+
+    # Effectuer un tri topologique inversé
+    ordre_topologique_inverse = tri_topologique(matrice)[::-1]  # Inverser l'ordre
+
+    # Calculer les dates au plus tard
+    for tache_id in ordre_topologique_inverse:
+        for successeur_id in range(n):
+            if matrice[tache_id][successeur_id] is not None:  # Si un arc existe de tache_id vers successeur_id
+                dates_tard[tache_id] = min(dates_tard[tache_id], dates_tard[successeur_id] - matrice[tache_id][successeur_id])
 
     return dates_tard
+
 
 # Calculer les marges
 def calculer_marges(dates_tot, dates_tard):

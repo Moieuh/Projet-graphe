@@ -1,44 +1,68 @@
 from Fonction import *
-
-
-#Faire une boucle avec la commande choix fichier
-fichier="Test/table 2.txt"
-tableau = lire_tableau(fichier)
-print_tab(tableau)
-print_graphe_ordonancement(tableau)
-# Construire et afficher la matrice
-if tableau:
-    n = len(tableau)  # Nombre de tâches
-    matrice = construire_matrice(tableau, n)
+r=0
+while(r==0):
+    #Faire une boucle avec la commande choix fichier
+    fichier=choisir_graph()
+    tableau = lire_tableau(fichier)
+    print_tab(tableau)
     
-    print_matrice(matrice)
- 
-    test_circuit=circuits(matrice)
-    
+    print("\n")
+    print(tableau)
+    print_graphe_ordonancement(tableau)
+    print("\n")
 
-    if test_circuit :
-        print("Il y a un circuit ")
-        print("C'est n'est pas un graphe d'ordonnancement")
+    # Construire et afficher la matrice
+    if tableau:
+        n = len(tableau)  # Nombre de tâches
+        matrice = construire_matrice(tableau, n)
         
-    else :
-        print("Il n'y a pas de circuit ")
-        test_arc=arc_neg(matrice)
-        if test_arc ==False:
-            print("Il n'y a pas d'arcs négatifs")
-            print("C'est un graphe d'ordonnancement")
-            rangs=calculer_rangs(tableau,n)
-            for sommet, rang in rangs.items():
-                print(f"Sommet {sommet} : Rang {rang+1}")
-        else:
-            print("Il a des arcs négatifs")
+        print_matrice(matrice)
+        print("\n")
+   
+        test_circuit=circuits(matrice)
+        
+
+        if test_circuit :
+            print("Il y a un circuit ")
             print("C'est n'est pas un graphe d'ordonnancement")
-
-
-dates_tot = [0,0,0, 2, 6, 17, 5,7,12,17,26,7,25,26,33]     # Exemple de dates au plus tôt
-dates_tard = calendrier_plus_tard(dates_tot, matrice)
-print("Dates au plus tard :", dates_tard)
-
-    # Calcul des marges
-marges = calculer_marges(dates_tot, dates_tard)
-print("Marges :", marges)
             
+        else :
+            print("Il n'y a pas de circuit ")
+            test_arc=arc_neg(matrice)
+            if test_arc ==False:
+                print("Il n'y a pas d'arcs négatifs")
+                print("C'est un graphe d'ordonnancement")
+                print("\n")
+
+                rangs=calculer_rangs(tableau,n)
+                for sommet, rang in rangs.items():
+                    print(f"Sommet {sommet} : Rang {rang+1}")
+                print("\n")
+                
+                print("Calendrier au plus tôt:")
+                dates_tot = calcul_dates_au_plus_tot(tableau) 
+                for sommet, date in enumerate(dates_tot):
+                    print(f"Sommet {sommet} : Date au plus tôt {date}")  # Exemple de dates au plus tôt
+                print("\n")
+                print(dates_tot)
+
+                print("Calendrier au plus tard:")
+                dates_tard = calendrier_plus_tard(dates_tot, matrice)
+                for sommet, date in enumerate(dates_tard):
+                    print(f"Sommet {sommet} : Date au plus tard {date}")
+                print(dates_tard)
+                print("\n")
+                
+                    # Calcul des marges
+                marges = calculer_marges(dates_tot, dates_tard)
+                print("Marges :", marges)
+            
+            else:
+                print("Il a des arcs négatifs")
+                print("C'est n'est pas un graphe d'ordonnancement")
+    
+    print("\n")
+    r=int(input("Voulez essayer un autre fichier?\n oui:0\n non:1 "))
+
+
+                

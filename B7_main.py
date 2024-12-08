@@ -1,4 +1,4 @@
-from Fonction import *
+from B7_Fonction import *
 r=0
 while(r==0):
     #Faire une boucle avec la commande choix fichier

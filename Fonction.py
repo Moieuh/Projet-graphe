@@ -288,3 +288,78 @@ def calendrier_plus_tot_bellman(tableau, n):
             return None
 
     return dates_tot
+<<<<<<< Updated upstream
+=======
+# Calculer le calendrier au plus tard
+def calendrier_plus_tard(dates_tot,matrice):
+    
+    # Initialiser à l'infini
+    n = len(matrice)
+    dates_tard = [float('inf')] * n
+    dates_tard[-1] = dates_tot[-1]
+    
+    # Parcourir les tâches dans l'ordre décroissant des rangs
+    for i in range(n - 2, -1, -1):
+        for j in range(n):
+            if matrice[i][j] is not None and matrice[i][j] != '*':
+                dates_tard[i] = min(dates_tard[i], dates_tard[j] - matrice[i][j])
+
+    return dates_tard
+
+# Calculer les marges
+def calculer_marges(dates_tot, dates_tard):
+    
+    marges = []
+    for tot, tard in zip(dates_tot, dates_tard):
+        marges.append(tard-tot)
+        
+    return marges
+
+def calcul_dates_au_plus_tot(tableau):
+    """
+    Calcul des dates au plus tôt pour chaque tâche à l'aide de la méthode de Bellman.
+
+    Args:
+        tableau (list): Une liste contenant les informations des tâches sous forme :
+                        [ID_tâche, durée, prédécesseur1, prédécesseur2, ...]
+
+    Returns:
+        list: Une liste des dates au plus tôt pour chaque tâche (incluant les sommets fictifs).
+    """
+    # Identifier toutes les tâches et leurs prédécesseurs
+    ids_taches = set(t[0] for t in tableau)
+    for t in tableau:
+        ids_taches.update(t[2:])
+
+    # Déterminer le sommet fictif final (n+1)
+    n = max(ids_taches)
+
+    # Initialisation des dates au plus tôt
+    dates_au_plus_tot = [float('-inf')] * (n + 1)
+    dates_au_plus_tot[0] = 0  # Sommet fictif initial
+
+    # Construire la liste des arcs (u, v, poids)
+    arcs = []
+    for tache in tableau:
+        tache_id, duree, *predecesseurs = tache
+        if not predecesseurs:
+            # Arc fictif depuis le sommet initial
+            arcs.append((0, tache_id, 0))
+        for pred in predecesseurs:
+            arcs.append((pred, tache_id, duree))
+
+    # Algorithme de Bellman-Ford
+    for _ in range(len(ids_taches)):  # Au plus n-1 itérations
+        updated = False
+        for u, v, poids in arcs:
+            if dates_au_plus_tot[u] != float('-inf') and dates_au_plus_tot[v] < dates_au_plus_tot[u] + poids:
+                dates_au_plus_tot[v] = dates_au_plus_tot[u] + poids
+                updated = True
+        if not updated:
+            break
+
+    # Remplacer les -inf restants par 0 (cas des sommets isolés)
+    dates_au_plus_tot = [max(0, d) for d in dates_au_plus_tot]
+
+    return dates_au_plus_tot
+>>>>>>> Stashed changes

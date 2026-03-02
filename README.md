@@ -1,30 +1,30 @@
-# Job Market Data Pipeline & Analytics Dashboard
+# 🚀 Job Market Data Pipeline & Analytics Dashboard
 
-## Project Overview
+## 📌 Project Overview
 
 This project is a production-style ETL pipeline that:
 
-- Extracts remote job data from Remotive API
+- Extracts remote job data from the Remotive API
 - Transforms and cleans the data
 - Loads it into PostgreSQL
 - Tracks pipeline runs
-- Visualizes analytics with Metabase
+- Visualizes insights using Metabase
 
 ---
 
 ## 🏗 Architecture
 
-Remotive API
-        ↓
-Python ETL (pipeline.py)
-        ↓
-PostgreSQL (Docker)
-        ↓
-Metabase Dashboard
+Remotive API  
+⬇  
+Python ETL (pipeline.py)  
+⬇  
+PostgreSQL (Docker)  
+⬇  
+Metabase Dashboard  
 
 ---
 
-## Tech Stack
+## 🛠 Tech Stack
 
 - Python
 - PostgreSQL
@@ -35,7 +35,7 @@ Metabase Dashboard
 
 ---
 
-## Dashboard Features
+## 📊 Dashboard Features
 
 - Total jobs KPI
 - Jobs by category
@@ -46,7 +46,10 @@ Metabase Dashboard
 
 ---
 
-## How to Run
+## ⚙️ How to Run
+
+Clone the repository:
 
 ```bash
-docker compose up --build
+git clone https://github.com/your-username/job-market-pipeline.git
+cd job-market-pipeline
